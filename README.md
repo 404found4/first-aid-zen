@@ -18,10 +18,3 @@ It is built using:
 - Expandable with AI-powered assistance  
 
 ---
-
-## 🛠️ Setup & Installation
-
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/404found4/first-aid-zen.git
-   cd first-aid-zen
