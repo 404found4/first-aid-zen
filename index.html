@@ -7,6 +7,27 @@
   </head>
   <body class="bg-gray-50 text-gray-900">
     <div id="root"></div>
+
+    <!-- Main React App -->
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- IBM Watson Assistant Chatbot -->
+    <script>
+      window.watsonAssistantChatOptions = {
+        integrationID: "e4378128-de62-4dc1-b5f4-286931d530d8", // The ID of this integration
+        region: "au-syd", // The region your integration is hosted in
+        serviceInstanceID: "bea7906e-bea9-4488-8e20-43e80baba5df", // The ID of your service instance
+        onLoad: async (instance) => {
+          await instance.render(); // Render the chat widget
+        },
+      };
+
+      setTimeout(function () {
+        const t = document.createElement("script");
+        t.src =
+          "https://web-chat.global.assistant.watson.appdomain.cloud/versions/latest/WatsonAssistantChatEntry.js";
+        document.head.appendChild(t);
+      });
+    </script>
   </body>
 </html>
