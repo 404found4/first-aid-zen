@@ -1,5 +1,22 @@
 import React from 'react';
-import { AlertTriangle, Phone, AlertCircle } from 'lucide-react';
+import { AlertTriangle, AlertCircle } from 'lucide-react';
+
+const instructions = [
+  "Encourage coughing. If the person can cough, encourage them to continue coughing.",
+  "Give back blows. Lean person forward and give 5 sharp back blows between shoulder blades.",
+  "Perform abdominal thrusts. If back blows don't work, perform 5 abdominal thrusts (Heimlich maneuver)."
+];
+
+const speak = (text: string) => {
+  const synth = window.speechSynthesis;
+  synth.cancel();
+  const utter = new window.SpeechSynthesisUtterance(text);
+  synth.speak(utter);
+};
+
+const stopSpeaking = () => {
+  window.speechSynthesis.cancel();
+};
 
 const ChokingPage = () => {
   return (
@@ -52,16 +69,40 @@ const ChokingPage = () => {
         </div>
 
         <div className="flex gap-4 pt-6">
-          <button className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
-            🎧 Listen
+          <button
+            className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
+            onClick={() => speak(instructions.join(' '))}
+          >
+            🎧 Voice
+          </button>
+          <button
+            className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition-colors"
+            onClick={stopSpeaking}
+          >
+            ⏹️ Stop Voice
           </button>
           <button className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">
             📞 Call Emergency: 102
           </button>
         </div>
       </div>
+
+      {/* YouTube video embed */}
+      <div className="mt-8 flex justify-center">
+        <div className="w-80 h-80">
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/MkTZlRyXQiY"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="rounded"
+          ></iframe>
+        </div>
+      </div>
     </div>
   );
 };
-
 export default ChokingPage;

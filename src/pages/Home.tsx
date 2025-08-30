@@ -1,10 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Heart, AlertTriangle, Flame, Droplet, Bone, Activity, Skull, Zap } from "lucide-react";
+import {
+  Heart,
+  AlertTriangle,
+  Flame,
+  Droplet,
+  Bone,
+  Activity,
+  Skull,
+  Zap,
+} from "lucide-react";
 
-const emergencyData = [
+const FONT_FAMILY = "font-['Inter','Roboto','Open_Sans',sans-serif]";
+const NAVY = "#14213d";
+
+const isRedCard = (title: string) =>
+  ["CPR", "Heart Attack & Stroke", "Seizures", "Poisoning"].includes(title);
+
+export const emergencyData = [
   {
-    icon: <Heart className="text-red-600" />,
+    icon: <Heart className="w-16 h-16" />,
     title: "CPR",
     subtitle: "Cardiopulmonary resuscitation for unresponsive victims",
     steps: ["Check responsiveness", "Call for help", "Begin chest compressions"],
@@ -12,7 +27,7 @@ const emergencyData = [
     danger: true,
   },
   {
-    icon: <AlertTriangle className="text-orange-600" />,
+    icon: <AlertTriangle className="w-16 h-16" />,
     title: "Choking",
     subtitle: "Clear airway blockage in adults and children",
     steps: ["Encourage coughing", "Give back blows", "Perform abdominal thrusts"],
@@ -20,23 +35,31 @@ const emergencyData = [
     danger: true,
   },
   {
-    icon: <Flame className="text-yellow-500" />,
+    icon: <Flame className="w-16 h-16" />,
     title: "Burns & Scalds",
     subtitle: "Immediate care for thermal injuries",
-    steps: ["Cool with running water", "Cover with sterile cloth", "Avoid ice or ointments"],
+    steps: [
+      "Cool with running water",
+      "Cover with sterile cloth",
+      "Avoid ice or ointments",
+    ],
     link: "/burns",
     danger: false,
   },
   {
-    icon: <Droplet className="text-blue-700" />,
+    icon: <Droplet className="w-16 h-16" />,
     title: "Heavy Bleeding",
     subtitle: "Control severe bleeding and prevent shock",
-    steps: ["Apply firm pressure", "Elevate the wound", "Use clean cloth/bandage"],
+    steps: [
+      "Apply firm pressure",
+      "Elevate the wound",
+      "Use clean cloth/bandage",
+    ],
     link: "/bleeding",
     danger: true,
   },
   {
-    icon: <Bone className="text-purple-600" />,
+    icon: <Bone className="w-16 h-16" />,
     title: "Fractures",
     subtitle: "Manage broken bones and prevent further injury",
     steps: ["Immobilize the limb", "Apply splint if possible", "Avoid movement"],
@@ -44,23 +67,31 @@ const emergencyData = [
     danger: false,
   },
   {
-    icon: <Activity className="text-pink-600" />,
+    icon: <Activity className="w-16 h-16" />,
     title: "Heart Attack & Stroke",
     subtitle: "Recognize and respond to cardiovascular emergencies",
-    steps: ["Recognize symptoms", "Call emergency immediately", "Give aspirin if available"],
+    steps: [
+      "Recognize symptoms",
+      "Call emergency immediately",
+      "Give aspirin if available",
+    ],
     link: "/heart-stroke",
     danger: true,
   },
   {
-    icon: <Skull className="text-gray-800" />,
+    icon: <Skull className="w-16 h-16" />,
     title: "Poisoning",
     subtitle: "Emergency response for poisoning incidents",
-    steps: ["Remove from source", "Call poison control", "Follow expert guidance"],
+    steps: [
+      "Remove from source",
+      "Call poison control",
+      "Follow expert guidance",
+    ],
     link: "/poisoning",
     danger: false,
   },
   {
-    icon: <Zap className="text-yellow-600" />,
+    icon: <Zap className="w-16 h-16" />,
     title: "Seizures",
     subtitle: "Keep person safe during seizure episodes",
     steps: ["Stay calm and time it", "Clear area of hazards", "Turn to side"],
@@ -69,81 +100,138 @@ const emergencyData = [
   },
 ];
 
+const speak = (text: string) => {
+  const synth = window.speechSynthesis;
+  synth.cancel();
+  const utter = new window.SpeechSynthesisUtterance(text);
+  synth.speak(utter);
+};
+
+const stopSpeaking = () => {
+  window.speechSynthesis.cancel();
+};
+
 export default function Home() {
+  const allSteps = emergencyData
+    .map((item) => `${item.title}. ${item.steps.join(". ")}`)
+    .join(". ");
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-cyan-100 to-indigo-200 flex flex-col items-center px-6">
-      
-      {/* Hero Section */}
-      <section className="flex flex-col lg:flex-row items-center justify-between bg-white/90 rounded-2xl shadow-xl p-10 mt-10 w-full max-w-6xl">
-        <div className="max-w-lg text-center lg:text-left">
-          <h1 className="text-5xl font-extrabold text-red-600 mb-4 drop-shadow-lg">
-             Emergency First Aid Guide
-          </h1>
-          <p className="text-gray-800 italic mb-2">
-            Clear steps. Trusted guidance. Help when it matters most.
-          </p>
-          <p className="text-gray-700 mb-6">
-            In emergencies like CPR, choking, bleeding, or burns, every second counts. 
-            This guide gives you quick, verified steps so you can act confidently.
-          </p>
-          <div className="flex gap-4 justify-center lg:justify-start">
-            <button className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 shadow-md">🚨 Crisis Mode</button>
-            <button className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 shadow-md">🎧 Listen</button>
-          </div>
-        </div>
-        <div className="w-64 h-40 bg-gradient-to-r from-cyan-300 to-blue-500 rounded-xl shadow-lg mt-6 lg:mt-0"></div>
-      </section>
+    <div className={`min-h-screen w-full flex flex-col bg-blue-50 ${FONT_FAMILY}`}>
+      {/* Banner */}
+      <div
+        className="w-full py-12 px-4 flex flex-col md:flex-row items-center justify-between shadow-lg gap-4"
+        style={{
+          background: NAVY,
+        }}
+      >
+        <h1
+          className="text-5xl md:text-6xl font-extrabold text-white tracking-tight text-center"
+          style={{
+            textShadow: "0 2px 16px #22305a, 0 0px 8px #fff2",
+            letterSpacing: "0.01em",
+          }}
+        >
+          Emergency Procedures
+        </h1>
+        <Link
+          to="/crisis"
+          className="bg-red-600 hover:bg-red-700 text-white font-bold text-xl px-8 py-4 rounded-2xl shadow-lg transition"
+        >
+          🚨 Crisis
+        </Link>
+      </div>
 
-      {/* Emergency Cards */}
-      <section className="mt-12 w-full max-w-6xl">
-        <h2 className="text-3xl font-bold text-blue-900 text-center mb-4">⚡ Emergency Procedures</h2>
-        <p className="text-gray-800 text-center mb-10">
-          Quick access to life-saving procedures. Each guide includes step-by-step instructions.
-        </p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-          {emergencyData.map((item, idx) => (
-            <div
-              key={idx}
-              className={`rounded-xl shadow-lg p-6 flex flex-col w-80 transition transform hover:scale-105 
-                ${item.danger ? "bg-red-100 border border-red-400" : "bg-blue-100 border border-blue-400"}`}
-            >
-              <div className="flex items-center mb-2">
-                <span className="text-3xl mr-2">{item.icon}</span>
-                <h3 className="font-bold text-lg text-gray-900">{item.title}</h3>
+      {/* Cards Grid */}
+      <main className="flex-1 w-full max-w-[1800px] mx-auto px-4 py-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10">
+          {emergencyData.map((item, idx) => {
+            const red = isRedCard(item.title);
+            return (
+              <div
+                key={idx}
+                className={`
+                  flex flex-col justify-between
+                  rounded-3xl shadow-xl
+                  min-h-[32rem] h-full px-14 py-12
+                  border transition hover:shadow-2xl
+                  ${red
+                    ? "bg-gradient-to-br from-red-50 to-white border-red-200"
+                    : "bg-gradient-to-br from-blue-50 to-white border-blue-200"}
+                `}
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  maxWidth: "100%",
+                }}
+              >
+                <div>
+                  <div className="flex items-center gap-8 mb-8">
+                    <div className={`rounded-full p-6 shadow ${red ? "bg-red-100" : "bg-blue-100"}`}>
+                      {React.cloneElement(item.icon, {
+                        className: `w-16 h-16 ${red ? "text-red-600" : "text-blue-700"}`,
+                      })}
+                    </div>
+                    <h3 className={`font-bold text-3xl md:text-4xl ${red ? "text-red-700" : "text-[#14213d]"}`}>
+                      {item.title}
+                    </h3>
+                  </div>
+                  <p className="text-[#22305a] text-xl mb-3 font-medium">{item.subtitle}</p>
+                  <h4 className={`font-semibold mb-3 ${red ? "text-red-700" : "text-[#14213d]"}`}>Quick Steps:</h4>
+                  <ul className="list-disc list-inside text-[#22305a] text-lg mb-8 space-y-1">
+                    {item.steps.map((step, i) => (
+                      <li key={i}>{step}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="flex flex-col gap-4 mt-2">
+                  <Link
+                    to={item.link}
+                    className={`
+                      w-full text-white text-center py-4 rounded-xl font-semibold shadow transition text-xl
+                      ${red
+                        ? "bg-red-600 hover:bg-red-700"
+                        : "bg-[#14213d] hover:bg-blue-900"}
+                    `}
+                  >
+                    View Full Guide
+                  </Link>
+                  <button
+                    className="w-full bg-green-600 text-white py-4 rounded-xl font-semibold shadow hover:bg-green-700 transition text-xl"
+                    onClick={() => speak(`${item.title}. ${item.steps.join(". ")}`)}
+                  >
+                    🎧 Listen
+                  </button>
+                  {item.danger && (
+                    <button className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-4 rounded-xl font-semibold shadow hover:from-red-700 hover:to-red-800 transition text-xl">
+                      📞 Call Emergency: 102
+                    </button>
+                  )}
+                </div>
               </div>
-              <p className="text-gray-700 text-sm mb-2">{item.subtitle}</p>
-              <h4 className="font-semibold text-gray-800 mb-1">Quick Steps:</h4>
-              <ul className="list-decimal list-inside text-gray-700 text-sm mb-4">
-                {item.steps.map((step, i) => (
-                  <li key={i}>{step}</li>
-                ))}
-              </ul>
-              <div className="flex flex-col gap-2">
-                <Link to={item.link} className="bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 shadow-md">
-                  View Full Guide
-                </Link>
-                <button className="bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 shadow-md">🎧 Listen</button>
-                {item.danger && (
-                  <button className="bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 shadow-md">📞 Call Emergency: 911</button>
-                )}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-      </section>
-
-      {/* Bottom Emergency Section */}
-      <section className="mt-16 text-center max-w-3xl">
-        <p className="text-gray-800 mb-4">
-          Remember: These guides supplement professional medical training. 
-          Always call emergency services for serious injuries or life-threatening situations.
-        </p>
-        <div className="flex justify-center gap-4">
-          <button className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 shadow-md">📞 Call 911</button>
-          <button className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 shadow-md">🚨 Crisis Mode</button>
+        {/* Voice Controls */}
+        <div className="flex flex-col md:flex-row gap-4 justify-center mt-16 max-w-2xl mx-auto">
+          <button
+            className="flex-1 bg-[#14213d] text-white py-5 rounded-xl font-semibold shadow hover:bg-[#22305a] transition text-xl"
+            onClick={() => speak(allSteps)}
+          >
+            🎧 Voice All
+          </button>
+          <button
+            className="flex-1 bg-green-600 text-white py-5 rounded-xl font-semibold shadow hover:bg-green-700 transition text-xl"
+            onClick={stopSpeaking}
+          >
+            ⏹️ Stop Voice
+          </button>
         </div>
-      </section>
-    </div>
+      </main>
+      <footer className="mt-12 mb-4 text-center text-[#a3b8d8] text-lg">
+       &copy;{new Date().getFullYear()}  First Aid Zen. For emergencies, always call your local emergency number.
+       </footer>
+       </div>
   );
 }
+        

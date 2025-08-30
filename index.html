@@ -18,7 +18,18 @@
         region: "au-syd", // The region your integration is hosted in
         serviceInstanceID: "bea7906e-bea9-4488-8e20-43e80baba5df", // The ID of your service instance
         onLoad: async (instance) => {
-          await instance.render(); // Render the chat widget
+          // 30% bigger: 400px * 1.3 = 520px, 560px * 1.3 = 728px
+          instance.updateCSSVariables({
+            "--watson-chat-container-width": "520px",
+            "--watson-chat-container-height": "728px",
+            "--watson-chat-font-size": "1.3rem", // 30% bigger font
+            "--watson-chat-header-title-font-size": "2.08rem", // 1.6rem * 1.3
+            "--watson-chat-header-subtitle-font-size": "1.17rem", // 0.9rem * 1.3
+            "--watson-chat-message-font-size": "1.3rem",
+            "--watson-chat-input-font-size": "1.3rem",
+            "--watson-chat-button-font-size": "1.3rem"
+          });
+          await instance.render();
         },
       };
 
