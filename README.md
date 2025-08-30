@@ -7,7 +7,7 @@ It is built using:
 -  TailwindCSS for styling  
 -  shadcn/ui for components  
    (Future) IBM Watsonx integration for AI-driven support  
--  Voice instructions & 🎥 YouTube videos planned for accessibility  
+-  Voice instructions &  YouTube videos planned for accessibility  
 
 ---
 
